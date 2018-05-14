@@ -39,7 +39,7 @@ def __split__(args):
                             sub_rec.append(record)
                             SeqIO.write(
                                 sub_rec,
-                                "subsample_%s%s.fastq" % (name, c_sub),
+                                f"subsample_{name}{c_sub}.fastq",
                                 "fastq")
                             c_sub += 1
                             c += 1
@@ -69,7 +69,7 @@ def __split__(args):
                             sub_rec.append(record)
                             SeqIO.write(
                                 sub_rec,
-                                "subsample%s%s.fastq" % (name, c_sub),
+                                f"subsample{name}{c_sub}.fastq",
                                 "fastq")
                             c_sub += 1
                             c += 1
