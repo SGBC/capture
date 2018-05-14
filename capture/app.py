@@ -6,6 +6,7 @@ import logging
 import argparse
 
 from capture.version import __version__
+from capture.split import split
 
 
 def assemble(args):
@@ -32,6 +33,27 @@ def main():
         default=False,
         help="print version and exit"
     )
+    parser.add_argument(
+        "-i",
+        "--input-file",
+        action="store",
+        help="Input reads file in format fastq fastq.gz or sam/bam",
+        type=str
+    )
+    parser.add_argument(
+        "-g",
+        "--genome-size",
+        action="store",
+        help="The size of the genome specific to your reads in numeric value",
+        type=int
+    )
+    parser.add_argument(
+        "-l",
+        "--length_read",
+        action="store",
+        help="The mean size of the reads present in the input file",
+        type=int
+    )
     parser.set_defaults(func=assemble)
     args = parser.parse_args()
 
@@ -46,3 +68,24 @@ def main():
         logger.debug(e)
         parser.print_help()
         # raise
+
+    try:
+        logging.basicConfig(level=logging.INFO)
+        logger = logging.getLogger(__name__)
+        extension = [".fastq", ".fq", ".fastq.gz", ".fq.gz", ".sam", ".bam"]
+        if not args.input_file.split(",").endswith(extension):
+            logger.info("please use a correct input file")
+            sys.exit(0)
+        else:
+            __split__(args)
+    except AttributeError as e:
+        logger.debug(e)
+        parser.print_help()
+        # raise
+
+    try:
+        if not os.path.exists("tempdir"):
+            os.makedirs("tempdir")
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
