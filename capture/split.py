@@ -10,7 +10,7 @@ def __split__(args):
     for file in args.input_file.split(","):
         wanted_cov = 100
         # caclul the number of reads in each subsample for a coverage
-        number_records = (wanted_cov*args.genome-size)/args.length_read
+        number_records = (wanted_cov * args.genome-size) / args.length_read
         if file.endswith(".bam", ".sam"):
             name = file.replace(".sam", "").replace(".bam", "")
             logger.info("Not available for now")
@@ -37,7 +37,10 @@ def __split__(args):
                             c += 1
                         else:
                             sub_rec.append(record)
-                            SeqIO.write(sub_rec, "subsample_%s%s.fastq" % (name, c_sub), "fastq")
+                            SeqIO.write(
+                                sub_rec,
+                                "subsample_%s%s.fastq" % (name, c_sub),
+                                "fastq")
                             c_sub += 1
                             c += 1
                             sub_rec = []
@@ -45,7 +48,10 @@ def __split__(args):
                         sub_rec.append(record)
                 if sub_rec != []:
                     # if not sub_rec: Don't know the best one
-                    SeqIO.write(sub_rec, "subsample_extra.fastq" % c_sub, "fastq")
+                    SeqIO.write(
+                        sub_rec,
+                        "subsample_extra.fastq" % c_sub,
+                        "fastq")
         else:
             with open(file, "rt") as handle:
                 file_records = SeqIO.parse()
@@ -61,7 +67,10 @@ def __split__(args):
                             c += 1
                         else:
                             sub_rec.append(record)
-                            SeqIO.write(sub_rec, "subsample%s%s.fastq" % (name, c_sub), "fastq")
+                            SeqIO.write(
+                                sub_rec,
+                                "subsample%s%s.fastq" % (name, c_sub),
+                                "fastq")
                             c_sub += 1
                             c += 1
                             sub_rec = []
@@ -69,4 +78,7 @@ def __split__(args):
                         sub_rec.append(record)
                 if sub_rec != []:
                     # if not sub_rec: Don't know the best one
-                    SeqIO.write(sub_rec, "subsample_extra.fastq" % c_sub, "fastq")
+                    SeqIO.write(
+                        sub_rec,
+                        "subsample_extra.fastq" % c_sub,
+                        "fastq")
