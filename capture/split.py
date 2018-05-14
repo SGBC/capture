@@ -5,7 +5,7 @@ import gzip
 from Bio import SeqIO
 
 
-def __split__(args):
+def split(args):
     logger = logging.getLogger(__name__)
     for file in args.input_file.split(","):
         wanted_cov = 100
