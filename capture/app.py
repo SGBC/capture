@@ -35,24 +35,26 @@ def main():
     )
     parser.add_argument(
         "-i",
-        "--input-file",
-        action="store",
+        "--input",
         help="Input reads file in format fastq fastq.gz or sam/bam",
         type=str
     )
     parser.add_argument(
         "-g",
-        "--genome-size",
-        action="store",
+        "--genome_size",
         help="The size of the genome specific to your reads in numeric value",
         type=int
     )
     parser.add_argument(
-        "-l",
-        "--length_read",
-        action="store",
+        "-m",
+        "--mean",
         help="The mean size of the reads present in the input file",
-        type=int
+        type=float
+    )
+    parser.add_argument(
+        "-o",
+        "--output"
+        help="The output directory"
     )
     parser.set_defaults(func=assemble)
     args = parser.parse_args()
