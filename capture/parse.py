@@ -34,12 +34,57 @@ def count_record(file):
             return(tot_records)
 
 
-def parse(file):
+def parse(args, file, type_f, num_sub, number_records):
+    c = 1
+    c_sub = 1
+    sub_rec = []
     if is_gzip(file):
         with gzip.open(file, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
-            return(file_record)
+            for record in file_record:
+                if c_sub <= num_sub:
+                    if c < number_records*c_sub:
+                        sub_rec.append(record)
+                        c += 1
+                    else:
+                        sub_rec.append(record)
+                        SeqIO.write(
+                            sub_rec,
+                            f"{args.output}/subsample_{type_f}{c_sub}.fastq",
+                            "fastq")
+                        c_sub += 1
+                        c += 1
+                        sub_rec = []
+                else:
+                    sub_rec.append(record)
+            if sub_rec != []:
+                # if not sub_rec: Don't know the best one
+                SeqIO.write(
+                    sub_rec,
+                    "subsample_extra.fastq" % c_sub,
+                    "fastq")
     else:
         with open(file, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
-            return(file_record)
+            for record in file_record:
+                if c_sub <= num_sub:
+                    if c < number_records*c_sub:
+                        sub_rec.append(record)
+                        c += 1
+                    else:
+                        sub_rec.append(record)
+                        SeqIO.write(
+                            sub_rec,
+                            f"{args.output}/subsample_{type_f}{c_sub}.fastq",
+                            "fastq")
+                        c_sub += 1
+                        c += 1
+                        sub_rec = []
+                else:
+                    sub_rec.append(record)
+            if sub_rec != []:
+                # if not sub_rec: Don't know the best one
+                SeqIO.write(
+                    sub_rec,
+                    "subsample_extra.fastq" % c_sub,
+                    "fastq")

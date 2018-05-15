@@ -96,6 +96,18 @@ def main():
         if args.version:
             logger.info(f"capture version {__version__}")
             sys.exit(0)
+        if args.forward:
+            if args.reverse:
+                pass
+            else:
+                logger.info("please give a forward and a reverse sequence")
+                sys.exit(0)
+        elif args.reverse:
+            if args.forward:
+                pass
+            else:
+                logger.info("please give a forward and a reverse sequence")
+                sys.exit(0)
         args.func(args)
     except AttributeError as e:
         logger.debug(e)
