@@ -17,14 +17,8 @@ def assemble(args):
     args (object): the argument dictionary from argparse
     """
     logger = logging.getLogger(__name__)
-    print('hi from assemble')
-    logger = logging.getLogger(__name__)
-    extension = [".fastq", ".fq", ".fastq.gz", ".fq.gz", ".sam", ".bam"]
-    if not args.input_file.split(",").endswith(extension):
-        logger.info("please use a correct input file")
-        sys.exit(0)
-    else:
-        split(args)
+    print("hi from assemble")
+    
 
 
 def main():
@@ -43,7 +37,7 @@ def main():
     parser.add_argument(
         "-i",
         "--input",
-        help="Input reads file in format fastq fastq.gz or sam/bam",
+        help="Input reads file in format fastq fastq.gz",
         type=str
     )
     parser.add_argument(
