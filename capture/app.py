@@ -61,7 +61,7 @@ def main():
         logging.basicConfig(level=logging.INFO)
         logger = logging.getLogger(__name__)
         if args.version:
-            logger.info("capture version %s" % __version__)
+            logger.info(f"capture version {__version__}")
             sys.exit(0)
         args.func(args)
     except AttributeError as e:
