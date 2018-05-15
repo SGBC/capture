@@ -18,6 +18,13 @@ def assemble(args):
     """
     logger = logging.getLogger(__name__)
     print('hi from assemble')
+    logger = logging.getLogger(__name__)
+    extension = [".fastq", ".fq", ".fastq.gz", ".fq.gz", ".sam", ".bam"]
+    if not args.input_file.split(",").endswith(extension):
+        logger.info("please use a correct input file")
+        sys.exit(0)
+    else:
+        split(args)
 
 
 def main():
@@ -70,24 +77,3 @@ def main():
         logger.debug(e)
         parser.print_help()
         # raise
-
-    try:
-        logging.basicConfig(level=logging.INFO)
-        logger = logging.getLogger(__name__)
-        extension = [".fastq", ".fq", ".fastq.gz", ".fq.gz", ".sam", ".bam"]
-        if not args.input_file.split(",").endswith(extension):
-            logger.info("please use a correct input file")
-            sys.exit(0)
-        else:
-            __split__(args)
-    except AttributeError as e:
-        logger.debug(e)
-        parser.print_help()
-        # raise
-
-    try:
-        if not os.path.exists("tempdir"):
-            os.makedirs("tempdir")
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            raise
