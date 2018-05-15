@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 import logging
 import argparse
@@ -18,7 +19,13 @@ def assemble(args):
     """
     logger = logging.getLogger(__name__)
     print("hi from assemble")
-    
+    try:
+        os.makedirs(args.output)
+    except OSError as e:
+        logger.error(f"{args.output} already exists. Aborting.")
+        sys.exit(1)
+    else:
+        pass
 
 
 def main():
