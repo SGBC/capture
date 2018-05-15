@@ -6,8 +6,8 @@ import sys
 import logging
 import argparse
 
+from capture import split
 from capture.version import __version__
-from capture.split import split
 
 
 def assemble(args):
@@ -21,6 +21,11 @@ def assemble(args):
     print("hi from assemble")
     try:
         os.makedirs(args.output)
+        if args.forward:
+            split.split(args, args.forward, type_f="forward")
+            split.split(args, args.reverse, type_f="reverse")
+        elif args.uniq:
+            split.split(args, args.uniq, type_f="uniq")
     except OSError as e:
         logger.error(f"{args.output} already exists. Aborting.")
         sys.exit(1)
@@ -34,6 +39,7 @@ def main():
         usage="capture [arguments]",
         description="the capture-seq assembler"
     )
+    file_group = parser.add_mutually_exclusive_group()
     parser.add_argument(
         "-v",
         "--version",
@@ -41,11 +47,28 @@ def main():
         default=False,
         help="print version and exit"
     )
-    parser.add_argument(
-        "-i",
-        "--input",
+    file_group.add_argument(
+        "-u",
+        "--uniq",
         help="Input reads file in format fastq fastq.gz",
         type=str
+    )
+    file_group.add_argument(
+        "-f",
+        "--forward",
+        help="Input forward file in format fastq fastq.gz",
+        type=str
+    )
+    parser.add_argument(
+        "-r",
+        "--reverse",
+        help="Input reverse file in format fastq fastq.gz",
+        type=str
+    )
+    file_group.add_argument(
+        "-b",
+        "--bam",
+        help="Input the reads file in bam format"
     )
     parser.add_argument(
         "-g",
@@ -61,7 +84,7 @@ def main():
     )
     parser.add_argument(
         "-o",
-        "--output"
+        "--output",
         help="The output directory"
     )
     parser.set_defaults(func=assemble)
@@ -77,4 +100,4 @@ def main():
     except AttributeError as e:
         logger.debug(e)
         parser.print_help()
-        # raise
+        raise
