@@ -18,16 +18,18 @@ def assemble(args):
     args (object): the argument dictionary from argparse
     """
     logger = logging.getLogger(__name__)
-    print("hi from assemble")
     try:
         os.makedirs(args.output)
-        if args.forward:
+        if args.forward and args.reverse:
             split.split(args, args.forward, type_f="forward")
             split.split(args, args.reverse, type_f="reverse")
         elif args.uniq:
             split.split(args, args.uniq, type_f="uniq")
         elif args.bam:
             split.split(args, args.bam, type_f="bam")
+        else:
+            logger.error("Invalid combination of input files. Aborting")
+            sys.exit(1)
     except OSError as e:
         logger.error(f"{args.output} already exists. Aborting.")
         sys.exit(1)
@@ -98,18 +100,6 @@ def main():
         if args.version:
             logger.info(f"capture version {__version__}")
             sys.exit(0)
-        if args.forward:
-            if args.reverse:
-                pass
-            else:
-                logger.info("please give a forward and a reverse sequence")
-                sys.exit(0)
-        elif args.reverse:
-            if args.forward:
-                pass
-            else:
-                logger.info("please give a forward and a reverse sequence")
-                sys.exit(0)
         args.func(args)
     except AttributeError as e:
         logger.debug(e)
