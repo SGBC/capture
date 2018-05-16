@@ -4,7 +4,7 @@
 import logging
 
 from Bio import SeqIO
-
+from capture import bam
 from capture import parse
 
 
@@ -14,7 +14,10 @@ def split(args, file, type_f, wanted_cov=50):
     number_records = (wanted_cov * args.genome_size) / args.mean
     # the subsampling is the same for fastq gzip and not gzip
     # as we can have more than one file, we use the name for subsample
-    tot_records = parse.count_record(file)
+    if type_f == "bam":
+        tot_records = bam.count_bam(file)
+    else:
+        tot_records = parse.count_record(file)
     num_sub = tot_records//number_records
     # while c_sub <= num_sub:
     #         while c <= number_records*c_sub:

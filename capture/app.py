@@ -26,6 +26,8 @@ def assemble(args):
             split.split(args, args.reverse, type_f="reverse")
         elif args.uniq:
             split.split(args, args.uniq, type_f="uniq")
+        elif args.bam:
+            split.split(args, args.bam, type_f="bam")
     except OSError as e:
         logger.error(f"{args.output} already exists. Aborting.")
         sys.exit(1)

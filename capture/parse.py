@@ -2,9 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import gzip
+import pysam
 import logging
 
+
 from Bio import SeqIO
+from capture import bam
 
 
 def is_gzip(file):
@@ -63,6 +66,25 @@ def parse(args, file, type_f, num_sub, number_records):
                     sub_rec,
                     "subsample_extra.fastq" % c_sub,
                     "fastq")
+    elif type_f == "bam":
+        file_record = pysam.AlignmentFile(file, "rb")
+        for record in file_record.fetch():
+            if c_sub <= num_sub:
+                if c < number_records*c_sub:
+                    sub_rec.append(record)
+                    c += 1
+                else:
+                    sub_rec.append(record)
+                    bam.write(sub_rec, args, type_f, c_sub, file_record)
+                    c_sub += 1
+                    c += 1
+                    sub_rec = []
+            else:
+                sub_rec.append(record)
+        if sub_rec != []:
+            # if not sub_rec: Don't know the best one
+            bam.write(sub_rec, args, type_f, c_sub, file_record)
+        file_record.close()
     else:
         with open(file, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
