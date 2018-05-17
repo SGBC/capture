@@ -108,6 +108,9 @@ def parse_fq(output, file, type_f, num_sub, number_records):
 def parse_bam(output, file, type_f, num_sub, number_records):
     """ same as parse_fq but for bam format
     """
+    c = 1
+    c_sub = 1
+    sub_rec = []
     file_record = pysam.AlignmentFile(file, "rb")
     for record in file_record.fetch():
         if c_sub <= num_sub:
@@ -116,7 +119,7 @@ def parse_bam(output, file, type_f, num_sub, number_records):
                 c += 1
             else:
                 sub_rec.append(record)
-                bam.write(sub_rec, output, type_f, c_sub, file_record)
+                bam.write(sub_rec, output, c_sub, file_record)
                 c_sub += 1
                 c += 1
                 sub_rec = []
