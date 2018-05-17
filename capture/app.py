@@ -18,15 +18,30 @@ def assemble(args):
     args (object): the argument dictionary from argparse
     """
     logger = logging.getLogger(__name__)
+    genome_size = args.genome_size
+    mean_size = args.mean
+    output = args.output
     try:
         os.makedirs(args.output)
         if args.forward and args.reverse:
-            split.split(args, args.forward, type_f="forward")
-            split.split(args, args.reverse, type_f="reverse")
+            split.split_fq(
+                genome_size, mean_size, output,
+                args.forward, type_f="forward"
+                )
+            split.split_fq(
+                genome_size, mean_size, output,
+                args.reverse, type_f="reverse"
+             )
         elif args.uniq:
-            split.split(args, args.uniq, type_f="uniq")
+            split.split_fq(
+                genome_size, mean_size, output,
+                args.uniq, type_f="uniq"
+            )
         elif args.bam:
-            split.split(args, args.bam, type_f="bam")
+            split.split_bam(
+                genome_size, mean_size, output,
+                args.bam, type_f="bam"
+            )
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)

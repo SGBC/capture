@@ -11,6 +11,9 @@ from capture import bam
 
 
 def is_gzip(file):
+    """ test if the file is gzip using the 4 first byte of the file
+        who are characteristic of the type of file
+    """
     logger = logging.getLogger(__name__)
     magic_number = b"\x1f\x8b\x08\x08"
     f = open(file, "rb")
@@ -25,6 +28,8 @@ def is_gzip(file):
 
 
 def count_record(file):
+    """count the number of reads present in the file
+    """
     if is_gzip(file):
         with gzip.open(file, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
@@ -37,7 +42,12 @@ def count_record(file):
             return(tot_records)
 
 
-def parse(args, file, type_f, num_sub, number_records):
+def parse_fq(output, file, type_f, num_sub, number_records):
+    """ we read the file, we make a sum of the reads
+        each time we get the number of reads for the wanted coverage
+        we save them in a subfile, and keep reading the infile to
+        get the next subfile
+    """
     c = 1
     c_sub = 1
     sub_rec = []
@@ -53,38 +63,21 @@ def parse(args, file, type_f, num_sub, number_records):
                         sub_rec.append(record)
                         SeqIO.write(
                             sub_rec,
-                            f"{args.output}/subsample_{type_f}{c_sub}.fastq",
+                            f"{output}/subsample_{type_f}{c_sub}.fastq",
                             "fastq")
                         c_sub += 1
                         c += 1
                         sub_rec = []
                 else:
                     sub_rec.append(record)
+            # if there is still reads we save them in an extrafile
             if sub_rec != []:
-                # if not sub_rec: Don't know the best one
+                # OR if not sub_rec: Don't know the best method
                 SeqIO.write(
                     sub_rec,
-                    "subsample_extra.fastq" % c_sub,
-                    "fastq")
-    elif type_f == "bam":
-        file_record = pysam.AlignmentFile(file, "rb")
-        for record in file_record.fetch():
-            if c_sub <= num_sub:
-                if c < number_records*c_sub:
-                    sub_rec.append(record)
-                    c += 1
-                else:
-                    sub_rec.append(record)
-                    bam.write(sub_rec, args, type_f, c_sub, file_record)
-                    c_sub += 1
-                    c += 1
-                    sub_rec = []
-            else:
-                sub_rec.append(record)
-        if sub_rec != []:
-            # if not sub_rec: Don't know the best one
-            bam.write(sub_rec, args, type_f, c_sub, file_record)
-        file_record.close()
+                    "subsample_extra.fastq",
+                    "fastq"
+                    )
     else:
         with open(file, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
@@ -97,7 +90,7 @@ def parse(args, file, type_f, num_sub, number_records):
                         sub_rec.append(record)
                         SeqIO.write(
                             sub_rec,
-                            f"{args.output}/subsample_{type_f}{c_sub}.fastq",
+                            f"{output}/subsample_{type_f}{c_sub}.fastq",
                             "fastq")
                         c_sub += 1
                         c += 1
@@ -108,5 +101,28 @@ def parse(args, file, type_f, num_sub, number_records):
                 # if not sub_rec: Don't know the best one
                 SeqIO.write(
                     sub_rec,
-                    "subsample_extra.fastq" % c_sub,
+                    "subsample_extra.fastq",
                     "fastq")
+
+
+def parse_bam(output, file, type_f, num_sub, number_records):
+    """ same as parse_fq but for bam format
+    """
+    file_record = pysam.AlignmentFile(file, "rb")
+    for record in file_record.fetch():
+        if c_sub <= num_sub:
+            if c < number_records*c_sub:
+                sub_rec.append(record)
+                c += 1
+            else:
+                sub_rec.append(record)
+                bam.write(sub_rec, output, type_f, c_sub, file_record)
+                c_sub += 1
+                c += 1
+                sub_rec = []
+        else:
+            sub_rec.append(record)
+    if sub_rec != []:
+        # if not sub_rec: Don't know the best one
+        bam.write(sub_rec, output, c_sub, file_record)
+    file_record.close()
