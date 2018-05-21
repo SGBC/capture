@@ -6,5 +6,7 @@ install:
     - pipenv install --dev
 script:
     - pipenv run test
+after_success:
+    - pipenv run codecov
 notifications:
     email: false
