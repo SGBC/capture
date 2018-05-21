@@ -24,21 +24,21 @@ def assemble(args):
     try:
         os.makedirs(args.output)
         if args.forward and args.reverse:
-            split.split_fq(
+            split.split(
                 genome_size, mean_size, output,
                 args.forward, type_f="forward"
                 )
-            split.split_fq(
+            split.split(
                 genome_size, mean_size, output,
                 args.reverse, type_f="reverse"
              )
         elif args.uniq:
-            split.split_fq(
+            split.split(
                 genome_size, mean_size, output,
                 args.uniq, type_f="uniq"
             )
         elif args.bam:
-            split.split_bam(
+            split.split(
                 genome_size, mean_size, output,
                 args.bam, type_f="bam"
             )
