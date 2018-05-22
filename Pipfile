@@ -8,11 +8,13 @@ name = "pypi"
 [packages]
 
 biopython = "*"
+pysam = "*"
 
 
 [dev-packages]
 
 nose = "*"
+codecov = "*"
 
 
 [requires]
@@ -23,4 +25,4 @@ python_version = "3.6"
 [scripts]
 
 capture = "python -m capture"
-test = "nosetests"
+test = "nosetests --with-coverage --cover-package=capture"
