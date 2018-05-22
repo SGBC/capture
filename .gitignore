@@ -1,2 +1,5 @@
 # python stuff
 __pycache__
+
+# ci/coverage
+.coverage
