@@ -8,7 +8,7 @@ from capture import bam
 from capture import parse
 
 
-def split(genome_size, mean_size, output, file, type_f, wanted_cov=50):
+def split(genome_size, mean_size, output, file, type_f, wanted_cov=100):
     """ calcul the number of reads needed in each subsample then
         parse the file and make the subsample
     """
@@ -21,7 +21,9 @@ def split(genome_size, mean_size, output, file, type_f, wanted_cov=50):
         tot_records = bam.count_bam(file)
         num_sub = tot_records // number_records
         parse.parse_bam(output, file, type_f, num_sub, number_records)
+        return num_sub
     else:
         tot_records = parse.count_record(file)
         num_sub = tot_records // number_records
         parse.parse_fq(output, file, type_f, num_sub, number_records)
+        return num_sub

@@ -6,7 +6,9 @@ import sys
 import logging
 import argparse
 
+
 from capture import split
+from capture import external_run
 from capture.version import __version__
 
 
@@ -24,24 +26,27 @@ def assemble(args):
     try:
         os.makedirs(args.output)
         if args.forward and args.reverse:
-            split.split(
+            num_sub = split.split(
                 genome_size, mean_size, output,
                 args.forward, type_f="forward"
                 )
-            split.split(
+            num_sub = split.split(
                 genome_size, mean_size, output,
                 args.reverse, type_f="reverse"
              )
+            external_run.spades(num_sub, output, type_r="pe")
         elif args.uniq:
-            split.split(
+            num_sub = split.split(
                 genome_size, mean_size, output,
                 args.uniq, type_f="uniq"
             )
+            external_run.spades(num_sub, output, type_r="uniq")
         elif args.bam:
-            split.split(
+            num_sub = split.split(
                 genome_size, mean_size, output,
                 args.bam, type_f="bam"
             )
+            external_run.spades(num_sub, output, type_r="bam")
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)

@@ -15,11 +15,11 @@ def is_gzip(file):
         who are characteristic of the type of file
     """
     logger = logging.getLogger(__name__)
-    magic_number = b"\x1f\x8b\x08\x08"
+    magic_number = b"\x1f\x8b\x08"
     f = open(file, "rb")
     with f:
         try:
-            assert f.read(4) == magic_number
+            assert f.read(3) == magic_number
         except AssertionError as e:
             logger.info(f"{file} is not gzipped")
             return False
@@ -75,7 +75,7 @@ def parse_fq(output, file, type_f, num_sub, number_records):
                 # OR if not sub_rec: Don't know the best method
                 SeqIO.write(
                     sub_rec,
-                    "subsample_extra.fastq",
+                    f"{output}/subsample_extra.fastq",
                     "fastq"
                     )
     else:

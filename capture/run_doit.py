@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import doit
+
+from doit.doit_cmd import DoitMain
+from doit.cmd_base import TaskLoader
+from doit.task import clean_targets, dict_to_task
+
+# def task_example():
+#     return {
+#         'actions': ['myscript'],
+#         'file_dep': ['my_input_file'],
+#         'targets': ['result_file'],
+#     }
+
+
+def run_tasks(tasks, args, config={'verbosity': 0}):
+    '''Given a list of `Task` objects, a list of arguments,
+    and a config dictionary, execute the tasks.
+    Those task will be SPAdes and overlap layout
+    '''
+
+    if type(tasks) is not list:
+        raise TypeError('tasks must be of type list.')
+
+    class Loader(TaskLoader):
+        @staticmethod
+        def load_tasks(cmd, opt_values, pos_args):
+            return tasks, config
+
+    return DoitMain(Loader()).run(args)
+
+
+def make_task(task_dict_func):
+    '''Wrapper to decorate functions returning pydoit
+    `Task` dictionaries and have them return pydoit `Task`
+    objects
+    '''
+    def d_to_t(*args, **kwargs):
+        ret_dict = task_dict_func(*args, **kwargs)
+        return dict_to_task(ret_dict)
+    return d_to_t
+
+
+@make_task
+def task_spades(num, type_r, output):
+
+    if type_r == "pe":
+        cmd = f"""spades.py -1 {output}/subsample_forward{num}.fastq \
+        -2 {output}/subsample_reverse{num}.fastq -t 4 -m 24 \
+        -o {output}/spades{num} """
+        file_input1 = f"{output}/subsample_forward{num}.fastq"
+        file_input2 = f"{output}/subsample_reverse{num}.fastq"
+        output_dir = f"{output}/spades{num}"
+
+    elif type_r == "uniq":
+        cmd = f"""spades.py -s {output}/subsample_uniq{num}.fastq \
+         -t 4 -m 24 -o {output}/spades{num}"""
+        file_input1 = f"{output}/subsample_uniq{num}.fastq"
+        output_dir = f"{output}/spades{num}"
+
+    elif type_r == "bam":
+        cmd = f"""spades.py --ion {output}/subsample_{num}.bam \
+        -t 4 -m 24 -o {output}/spades{num}"""
+        file_input1 = f"{output}/subsample_{num}.bam"
+        output_dir = f"{output}/spades{num}"
+
+    return {
+            'name': f"spades {num}",
+            'file_dep': [file_input1, file_input2],
+            'targets': [output_dir],
+            'actions': [cmd],
+        }
