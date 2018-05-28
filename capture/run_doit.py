@@ -44,31 +44,41 @@ def make_task(task_dict_func):
 
 
 @make_task
-def task_spades(num, type_r, output):
+def task_spades(num, type_r, output, mem, thread):
 
     if type_r == "pe":
         cmd = f"""spades.py -1 {output}/subsample_forward{num}.fastq \
-        -2 {output}/subsample_reverse{num}.fastq -t 4 -m 24 \
+        -2 {output}/subsample_reverse{num}.fastq -t {thread} -m {mem} \
         -o {output}/spades{num} """
         file_input1 = f"{output}/subsample_forward{num}.fastq"
         file_input2 = f"{output}/subsample_reverse{num}.fastq"
         output_dir = f"{output}/spades{num}"
-
+        return {
+                'name': f"spades {num}",
+                'file_dep': [file_input1, file_input2],
+                'targets': [output_dir],
+                'actions': [cmd],
+            }
     elif type_r == "uniq":
         cmd = f"""spades.py -s {output}/subsample_uniq{num}.fastq \
-         -t 4 -m 24 -o {output}/spades{num}"""
+         -t {thread} -m {mem} -o {output}/spades{num} """
         file_input1 = f"{output}/subsample_uniq{num}.fastq"
         output_dir = f"{output}/spades{num}"
-
+        return {
+                'name': f"spades {num}",
+                'file_dep': [file_input1],
+                'targets': [output_dir],
+                'actions': [cmd],
+            }
     elif type_r == "bam":
-        cmd = f"""spades.py --ion {output}/subsample_{num}.bam \
-        -t 4 -m 24 -o {output}/spades{num}"""
+        cmd = f"""spades.py --phred-offset 64 --iontorrent \
+        -s {output}/subsample_{num}.bam \
+        -t {thread} -m {mem} -o {output}/spades{num}"""
         file_input1 = f"{output}/subsample_{num}.bam"
         output_dir = f"{output}/spades{num}"
-
-    return {
-            'name': f"spades {num}",
-            'file_dep': [file_input1, file_input2],
-            'targets': [output_dir],
-            'actions': [cmd],
-        }
+        return {
+                'name': f"spades {num}",
+                'file_dep': [file_input1],
+                'targets': [output_dir],
+                'actions': [cmd],
+            }

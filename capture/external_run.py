@@ -4,12 +4,12 @@
 from capture.run_doit import *
 
 
-def spades(num_sub, output, type_r):  # more parameter later
+def spades(num_sub, output, type_r, mem, thread):  # more parameter later
     num = 1
     tasks = []
     while num <= num_sub:
         tasks.append(task_spades(
-                               num, type_r, output
+                               num, type_r, output, mem, thread
                                ))  # add args later
         num += 1
     run_tasks(tasks, ['run'])

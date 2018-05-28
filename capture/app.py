@@ -5,7 +5,7 @@ import os
 import sys
 import logging
 import argparse
-
+import random as rnd
 
 from capture import split
 from capture import external_run
@@ -23,30 +23,44 @@ def assemble(args):
     genome_size = args.genome_size
     mean_size = args.mean
     output = args.output
+    mem = args.memory
+    thread = args.thread
+    subsample = args.subsample
     try:
         os.makedirs(args.output)
         if args.forward and args.reverse:
+            rndseed = rnd.randint(1, 1000000)
+            type_f = "forward"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.forward, type_f="forward"
+                args.forward, type_f, subsample,
+                rndseed
                 )
+            type_f = "reverse"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.reverse, type_f="reverse"
-             )
-            external_run.spades(num_sub, output, type_r="pe")
+                args.reverse, type_f, subsample,
+                rndseed
+                )
+            type_r = "pe"
+            external_run.spades(num_sub, output, type_r, mem, thread)
         elif args.uniq:
+            type_f = "uniq"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.uniq, type_f="uniq"
-            )
-            external_run.spades(num_sub, output, type_r="uniq")
+                args.uniq, type_f, subsample
+                )
+            type_r = "uniq"
+            external_run.spades(num_sub, output, type_r, mem, thread)
         elif args.bam:
+            type_f = "bam"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.bam, type_f="bam"
-            )
-            external_run.spades(num_sub, output, type_r="bam")
+                args.bam, type_f, subsample,
+                rndseed=0
+                )
+            type_r = "bam"
+            external_run.spades(num_sub, output, type_r, mem, thread)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)
@@ -92,7 +106,8 @@ def main():
     file_group.add_argument(
         "-b",
         "--bam",
-        help="Input the reads file in bam format"
+        help="""Input the reads file in bam format.
+        It will be considerate as Ion Torrent data in Spades"""
     )
     parser.add_argument(
         "-g",
@@ -110,6 +125,27 @@ def main():
         "-o",
         "--output",
         help="The output directory"
+    )
+    parser.add_argument(
+        "-s",
+        "--subsample",
+        default=0,
+        help="The number of subsample to produce. Default: the maximum",
+        type=int
+    )
+    parser.add_argument(
+        "-t",
+        "--thread",
+        default=4,
+        help="The number of threads available. Default: 4",
+        type=int
+    )
+    parser.add_argument(
+        "-M",
+        "--memory",
+        default=16,
+        help="The memory available in Gigs. Default: 16G",
+        type=int
     )
     parser.set_defaults(func=assemble)
     args = parser.parse_args()
