@@ -31,7 +31,7 @@ def test_parse_fq():
     num_sub = 2
     number_records = 7
     with open(file, "rt") as handle:
-        parse.parse_fq(output, file, type_f, num_sub, number_records)
+        parse.parse_fq(output, file, type_f, num_sub, number_records, handle)
     subfile = f"{output}/subsample_{type_f}1.fastq"
     with open(subfile, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")

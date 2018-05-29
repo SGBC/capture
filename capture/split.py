@@ -11,7 +11,7 @@ from capture import parse
 
 def split(
         genome_size, mean_size, output,
-        file, type_f, subsample, rndseed,
+        file, type_f, subsample,
         wanted_cov=100
         ):
     """ calcul the number of reads needed in each subsample then
@@ -66,7 +66,7 @@ def split(
                     parse.parse_fq_rnd(
                                     output, file, type_f,
                                     num_sub, number_records,
-                                    handle, rndseed, tot_records,
+                                    handle, tot_records,
                                     )
 
             else:
@@ -74,7 +74,7 @@ def split(
                     parse.parse_fq_rnd(
                                     output, file, type_f,
                                     num_sub, number_records,
-                                    handle, rndseed
+                                    handle
                                     )
 
             return num_sub

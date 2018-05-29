@@ -4,6 +4,7 @@
 import gzip
 import pysam
 import logging
+import itertools
 import random as rnd
 
 from Bio import SeqIO
@@ -81,43 +82,41 @@ def parse_fq(output, file, type_f, num_sub, number_records, handle):
 def parse_fq_rnd(
                 output, file, type_f,
                 num_sub, number_records,
-                handle, rndseed, tot_records
+                handle, tot_records
                 ):
-    rnd.seed(rndseed)
-    rnd_rec = rnd.sample(
-                        range(1, tot_records),
-                        (num_sub * number_records)
-                        )
-    print(type(rnd_rec))
-    # rnd_rec = rnd_rec.sort()
-    c = 1  # saved record counter
-    rec_c = 1  # record counter
-    c_sub = 1
-    sub_rec = []
+    total_record = tot_records
+    wanted_record = num_sub * number_records
     file_record = SeqIO.parse(handle, "fastq")
-    for record in file_record:
-        if c_sub <= num_sub:
-            if c < number_records*c_sub:
-                if rec_c in rnd_rec:
-                    sub_rec.append(record)
-                    c += 1
-                    rec_c += 1
-                else:
-                    rec_c += 1
-            else:
-                if rec_c in rnd_rec:
-                    sub_rec.append(record)
-                    SeqIO.write(
-                        sub_rec,
-                        f"{output}/subsample_{type_f}{c_sub}.fastq",
-                        "fastq")
-                    c_sub += 1
-                    c += 1
-                    sub_rec = []
-                    rec_c += 1
-                else:
-                    rec_c += 1
+    record_gen = reservoir(handle, total_record, wanted_record, file_record)
+    for x in range(num_sub):
+        subsample = itertools.islice(record_gen, number_records)
+        subsample_number = x + 1
+        SeqIO.write(subsample,
+                    f"{output}/subsample_{type_f}{subsample_number}.fastq",
+                    "fastq"
+                    )
 
+
+def reservoir(handle, total_record, wanted_record, file_record):
+    """yield a number of records from a fasta file using reservoir sampling
+    Args:
+        records (obj): fasta records from SeqIO.parse
+    Yields:
+        record (obj): a fasta record
+    """
+    samples = sorted(rnd.sample(
+                        range(1, total_record),
+                        (wanted_record)
+                        ))
+    # rnd_rec = rnd_rec.sort()
+    counter = 0
+    for sample in samples:
+        while counter < sample:
+            counter += 1
+            _ = file_record.__next__()
+        record = file_record.__next__()
+        counter += 1
+        yield record
 
 
 def parse_bam(output, file, type_f, num_sub, number_records):

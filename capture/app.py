@@ -29,18 +29,16 @@ def assemble(args):
     try:
         os.makedirs(args.output)
         if args.forward and args.reverse:
-            rndseed = rnd.randint(1, 1000000)
+            rnd.seed(1)
             type_f = "forward"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.forward, type_f, subsample,
-                rndseed
+                args.forward, type_f, subsample
                 )
             type_f = "reverse"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.reverse, type_f, subsample,
-                rndseed
+                args.reverse, type_f, subsample
                 )
             type_r = "pe"
             external_run.spades(num_sub, output, type_r, mem, thread)
@@ -56,8 +54,7 @@ def assemble(args):
             type_f = "bam"
             num_sub = split.split(
                 genome_size, mean_size, output,
-                args.bam, type_f, subsample,
-                rndseed=0
+                args.bam, type_f, subsample
                 )
             type_r = "bam"
             external_run.spades(num_sub, output, type_r, mem, thread)
