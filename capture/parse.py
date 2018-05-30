@@ -87,7 +87,7 @@ def parse_fq_rnd(
     total_record = tot_records
     wanted_record = num_sub * number_records
     file_record = SeqIO.parse(handle, "fastq")
-    record_gen = reservoir(handle, total_record, wanted_record, file_record)
+    record_gen = reservoir(total_record, wanted_record, file_record)
     for x in range(num_sub):
         subsample = itertools.islice(record_gen, number_records)
         subsample_number = x + 1
@@ -97,7 +97,7 @@ def parse_fq_rnd(
                     )
 
 
-def reservoir(handle, total_record, wanted_record, file_record):
+def reservoir(total_record, wanted_record, file_record):
     """yield a number of records from a fasta file using reservoir sampling
     Args:
         records (obj): fasta records from SeqIO.parse

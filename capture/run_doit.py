@@ -71,7 +71,7 @@ def task_spades(num, type_r, output, mem, thread):
                 'actions': [cmd],
             }
     elif type_r == "bam":
-        cmd = f"""spades.py --phred-offset 64 --iontorrent \
+        cmd = f"""spades.py --only-assembler --iontorrent \
         -s {output}/subsample_{num}.bam \
         -t {thread} -m {mem} -o {output}/spades{num}"""
         file_input1 = f"{output}/subsample_{num}.bam"
