@@ -82,3 +82,14 @@ def task_spades(num, type_r, output, mem, thread):
                 'targets': [output_dir],
                 'actions': [cmd],
             }
+    elif type_r == "test":
+        cmd = f"""spades.py -s  data/20_reads_R1.fastq\
+         -t {thread} -m {mem} -o {output} """
+        file_input1 = "data/20_reads_R1.fastq"
+        output_dir = f"{output}"
+        return {
+                'name': f"spades {num}",
+                'file_dep': [file_input1],
+                'targets': [output_dir],
+                'actions': [cmd],
+            }
