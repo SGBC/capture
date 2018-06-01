@@ -12,10 +12,11 @@ from doit.task import clean_targets, dict_to_task
 
 def test_doit_spades():
     type_r = "test"
-    output = "test_spades"
+    output = "testing_spades"
     mem = 24
     thread = 6
     num = "test"
+    tasks = []
     logger = logging.getLogger(__name__)
     tasks.append(task_spades(
                                num, type_r, output, mem, thread
