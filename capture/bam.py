@@ -15,6 +15,7 @@ def count_bam(file):
     for l in pysam.idxstats(file).split("\n")[:-1]:
         map_seq += int(l.split()[2])
         unmap_seq += int(l.split()[3])
+    #there's a other way to do that (add on end list)
     tot_records = map_seq + unmap_seq
     return(tot_records)
 
