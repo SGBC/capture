@@ -139,7 +139,7 @@ def parse_bam(output, file, type_f, num_sub, number_records):
                 sub_rec = []
         else:
             sub_rec.append(record)
-    if sub_rec != []:
+    if sub_rec:
         # if not sub_rec: Don't know the best one
         c_sub = "extra"
         bam.write(sub_rec, output, c_sub, file_record)

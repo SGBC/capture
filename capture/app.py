@@ -8,7 +8,7 @@ import argparse
 import random as rnd
 
 from capture import split
-from capture import external_run
+from capture import run
 from capture.version import __version__
 
 
@@ -41,7 +41,7 @@ def assemble(args):
                 args.reverse, type_f, subsample
                 )
             type_r = "pe"
-            external_run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output, type_r, mem, thread)
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
@@ -49,7 +49,7 @@ def assemble(args):
                 args.uniq, type_f, subsample
                 )
             type_r = "uniq"
-            external_run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output, type_r, mem, thread)
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
@@ -57,7 +57,7 @@ def assemble(args):
                 args.bam, type_f, subsample
                 )
             type_r = "bam"
-            external_run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output, type_r, mem, thread)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)

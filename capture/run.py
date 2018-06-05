@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from capture.run_doit import *
+from capture.jobs import *
 
 
 def spades(num_sub, output, type_r, mem, thread):  # more parameter later

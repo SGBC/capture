@@ -4,7 +4,7 @@
 import doit
 import logging
 
-from capture.run_doit import *
+from capture.jobs import *
 from doit.doit_cmd import DoitMain
 from doit.cmd_base import TaskLoader
 from doit.task import clean_targets, dict_to_task
