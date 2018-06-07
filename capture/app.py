@@ -3,12 +3,13 @@
 
 import os
 import sys
+import shutil
 import logging
 import argparse
 import random as rnd
 
-from capture import split
 from capture import run
+from capture import split
 from capture.version import __version__
 
 
@@ -28,36 +29,53 @@ def assemble(args):
     subsample = args.subsample
     try:
         os.makedirs(args.output)
+        output_temp= args.output + "/temp"
+        os.makedirs(output_temp)
         if args.forward and args.reverse:
             rnd.seed(1)
             type_f = "forward"
             num_sub = split.split(
-                genome_size, mean_size, output,
+                genome_size, mean_size, output_temp,
                 args.forward, type_f, subsample
                 )
             type_f = "reverse"
             num_sub = split.split(
-                genome_size, mean_size, output,
+                genome_size, mean_size, output_temp,
                 args.reverse, type_f, subsample
                 )
             type_r = "pe"
-            run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                try:
+                    shutil.rmtree(output_temp)
+                except OSError as e:
+                    print("Error: %s - %s." % (e.filename, e.strerror))
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
-                genome_size, mean_size, output,
+                genome_size, mean_size, output_temp,
                 args.uniq, type_f, subsample
                 )
             type_r = "uniq"
-            run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                try:
+                    shutil.rmtree(output_temp)
+                except OSError as e:
+                    print("Error: %s - %s." % (e.filename, e.strerror))
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
-                genome_size, mean_size, output,
+                genome_size, mean_size, output_temp,
                 args.bam, type_f, subsample
                 )
             type_r = "bam"
-            run.spades(num_sub, output, type_r, mem, thread)
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                try:
+                    shutil.rmtree(output_temp)
+                except OSError as e:
+                    print("Error: %s - %s." % (e.filename, e.strerror))
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)
@@ -143,6 +161,13 @@ def main():
         default=16,
         help="The memory available in Gigs. Default: 16G",
         type=int
+    )
+    parser.add_argument(
+        "-c",
+        "--clean",
+        action="store_false",
+        default=False,  # Normaly True but while testing it stays False
+        help="Clean the temporary files. Default: True"
     )
     parser.set_defaults(func=assemble)
     args = parser.parse_args()
