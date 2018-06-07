@@ -9,6 +9,7 @@ import argparse
 import random as rnd
 
 from capture import run
+from capture import clean
 from capture import split
 from capture.version import __version__
 
@@ -29,7 +30,7 @@ def assemble(args):
     subsample = args.subsample
     try:
         os.makedirs(args.output)
-        output_temp= args.output + "/temp"
+        output_temp = args.output + "/temp"
         os.makedirs(output_temp)
         if args.forward and args.reverse:
             rnd.seed(1)
@@ -46,10 +47,7 @@ def assemble(args):
             type_r = "pe"
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
-                try:
-                    shutil.rmtree(output_temp)
-                except OSError as e:
-                    print("Error: %s - %s." % (e.filename, e.strerror))
+                clean.clean_spades(output, num_sub)
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
@@ -59,10 +57,7 @@ def assemble(args):
             type_r = "uniq"
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
-                try:
-                    shutil.rmtree(output_temp)
-                except OSError as e:
-                    print("Error: %s - %s." % (e.filename, e.strerror))
+                clean.clean_spades(output, num_sub)
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
@@ -72,10 +67,7 @@ def assemble(args):
             type_r = "bam"
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
-                try:
-                    shutil.rmtree(output_temp)
-                except OSError as e:
-                    print("Error: %s - %s." % (e.filename, e.strerror))
+                clean.clean_spades(output, num_sub)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)
@@ -166,7 +158,7 @@ def main():
         "-c",
         "--clean",
         action="store_false",
-        default=False,  # Normaly True but while testing it stays False
+        default=True,  # Normaly True but while testing it stays False
         help="Clean the temporary files. Default: True"
     )
     parser.set_defaults(func=assemble)
