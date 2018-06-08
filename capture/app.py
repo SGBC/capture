@@ -3,9 +3,13 @@
 
 import os
 import sys
+import shutil
 import logging
 import argparse
+import random as rnd
 
+from capture import run
+from capture import clean
 from capture import split
 from capture.version import __version__
 
@@ -21,27 +25,49 @@ def assemble(args):
     genome_size = args.genome_size
     mean_size = args.mean
     output = args.output
+    mem = args.memory
+    thread = args.thread
+    subsample = args.subsample
     try:
         os.makedirs(args.output)
+        output_temp = args.output + "/temp"
+        os.makedirs(output_temp)
         if args.forward and args.reverse:
-            split.split(
-                genome_size, mean_size, output,
-                args.forward, type_f="forward"
+            rnd.seed(1)
+            type_f = "forward"
+            num_sub = split.split(
+                genome_size, mean_size, output_temp,
+                args.forward, type_f, subsample
                 )
-            split.split(
-                genome_size, mean_size, output,
-                args.reverse, type_f="reverse"
-             )
+            type_f = "reverse"
+            num_sub = split.split(
+                genome_size, mean_size, output_temp,
+                args.reverse, type_f, subsample
+                )
+            type_r = "pe"
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                clean.clean_spades(output, num_sub)
         elif args.uniq:
-            split.split(
-                genome_size, mean_size, output,
-                args.uniq, type_f="uniq"
-            )
+            type_f = "uniq"
+            num_sub = split.split(
+                genome_size, mean_size, output_temp,
+                args.uniq, type_f, subsample
+                )
+            type_r = "uniq"
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                clean.clean_spades(output, num_sub)
         elif args.bam:
-            split.split(
-                genome_size, mean_size, output,
-                args.bam, type_f="bam"
-            )
+            type_f = "bam"
+            num_sub = split.split(
+                genome_size, mean_size, output_temp,
+                args.bam, type_f, subsample
+                )
+            type_r = "bam"
+            run.spades(num_sub, output_temp, type_r, mem, thread)
+            if args.clean is True:
+                clean.clean_spades(output, num_sub)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)
@@ -87,7 +113,8 @@ def main():
     file_group.add_argument(
         "-b",
         "--bam",
-        help="Input the reads file in bam format"
+        help="""Input the reads file in bam format.
+        It will be considerate as Ion Torrent data in Spades"""
     )
     parser.add_argument(
         "-g",
@@ -105,6 +132,34 @@ def main():
         "-o",
         "--output",
         help="The output directory"
+    )
+    parser.add_argument(
+        "-s",
+        "--subsample",
+        default=0,
+        help="The number of subsample to produce. Default: the maximum",
+        type=int
+    )
+    parser.add_argument(
+        "-t",
+        "--thread",
+        default=4,
+        help="The number of threads available. Default: 4",
+        type=int
+    )
+    parser.add_argument(
+        "-M",
+        "--memory",
+        default=16,
+        help="The memory available in Gigs. Default: 16G",
+        type=int
+    )
+    parser.add_argument(
+        "-c",
+        "--clean",
+        action="store_false",
+        default=True,  # Normaly True but while testing it stays False
+        help="Clean the temporary files. Default: True"
     )
     parser.set_defaults(func=assemble)
     args = parser.parse_args()

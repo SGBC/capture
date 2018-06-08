@@ -30,7 +30,8 @@ def test_parse_fq():
     type_f = "forward"
     num_sub = 2
     number_records = 7
-    parse.parse_fq(output, file, type_f, num_sub, number_records)
+    with open(file, "rt") as handle:
+        parse.parse_fq(output, file, type_f, num_sub, number_records, handle)
     subfile = f"{output}/subsample_{type_f}1.fastq"
     with open(subfile, "rt") as handle:
             file_record = SeqIO.parse(handle, "fastq")
@@ -40,14 +41,14 @@ def test_parse_fq():
             file_record = SeqIO.parse(handle, "fastq")
             tot_records = sum(1 for line in file_record)
             assert tot_records == 6
-    try:
-        os.remove(f"{output}/subsample_{type_f}1.fastq")
-        os.remove(f"{output}/subsample_{type_f}2.fastq")
-        os.remove(f"{output}/subsample_extra.fastq")
-        os.rmdir(output)
-    except OSError as e:
-        logger.error("Couldn't remove the testing_fq. Exiting")
-        sys.exit(1)
+    # try:
+    #     os.remove(f"{output}/subsample_{type_f}1.fastq")
+    #     os.remove(f"{output}/subsample_{type_f}2.fastq")
+    #     os.remove(f"{output}/subsample_extra.fastq")
+    #     os.rmdir(output)
+    # except OSError as e:
+    #     logger.error("Couldn't remove the testing_fq. Exiting")
+    #     sys.exit(1)
 
 
 def test_parse_bam():
@@ -75,13 +76,13 @@ def test_parse_bam():
         counter += 1
     assert counter == 6
     file_record.close()
-    try:
-        os.remove(f"{output}/subsample_1.bam")
-        os.remove(f"{output}/subsample_1.bam.bai")
-        os.remove(f"{output}/subsample_2.bam")
-        os.remove(f"{output}/subsample_extra.bam")
-        os.remove(f"{output}/subsample_extra.bam.bai")
-        os.rmdir(output)
-    except OSError as e:
-        logger.error("Couldn't remove the testing_bam. Exiting")
-        sys.exit(1)
+    # try:
+    #     os.remove(f"{output}/subsample_1.bam")
+    #     os.remove(f"{output}/subsample_1.bam.bai")
+    #     os.remove(f"{output}/subsample_2.bam")
+    #     os.remove(f"{output}/subsample_extra.bam")
+    #     os.remove(f"{output}/subsample_extra.bam.bai")
+    #     os.rmdir(output)
+    # except OSError as e:
+    #     logger.error("Couldn't remove the testing_bam. Exiting")
+    #     sys.exit(1)
