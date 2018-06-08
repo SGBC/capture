@@ -48,6 +48,7 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            miniasm(num_sub, output, mem, thread, PARAMETER)
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
@@ -58,6 +59,7 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            miniasm(num_sub, output, mem, thread, PARAMETER)
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
@@ -68,6 +70,7 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            miniasm(num_sub, output, mem, thread, PARAMETER)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)

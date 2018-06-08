@@ -15,5 +15,11 @@ def spades(num_sub, output, type_r, mem, thread):  # more parameter later
     run_tasks(tasks, ['run'])
 
 
-# def overlap():
-    # To do later
+def miniasm(num_sub, output, mem, thread, PARAMETER):
+    tasks = []
+    tasks.append(task_minimap2(num_sub, output, mem, thread, PARAMETER))
+    task.append(task_miniasm(output, mem, thread, PARAMETER))
+    """ PARAMETER can be a PATH to a parameter file or can be a preset
+        number or a list of parameter Args
+    """
+    run_tasks(tasks, ['run'])

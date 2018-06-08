@@ -96,7 +96,7 @@ def task_spades(num, type_r, output, mem, thread):
 
 
 @make_task
-def task_minimap2():
+def task_minimap2(num_sub, output, mem, thread, PARAMETER):
     cmd = f"""minimap2 -x ava-pb/ava-ont
         {contig1} {contig2}
         -I {mem} or -K {mem}/thread
@@ -133,7 +133,7 @@ def task_minimap2():
 
 
 @make_task
-def task_miniasm():
+def task_miniasm(output, mem, thread, PARAMETER):
     cmd = """
         miniasm overlap.paf
         """
