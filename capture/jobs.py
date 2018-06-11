@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import doit
 
 from doit.doit_cmd import DoitMain
@@ -96,49 +95,36 @@ def task_spades(num, type_r, output, mem, thread):
 
 
 @make_task
-def task_minimap2(num_sub, output, mem, thread, PARAMETER):
-    cmd = f"""minimap2 -x ava-pb/ava-ont
-        {contig1} {contig2}
-        -I {mem} or -K {mem}/thread
-        -X ????
+def task_minimap2(num_sub, output, mem, thread):
+    contig_dir = f"{output}/temp"
+    output_dir = f"{output}/temp/minimap2"
+    contig1 = f"{contig_dir}/all_contigs.fasta"
+    memory_per_thread = mem // thread
+    cmd = f"""minimap2
+        {contig1} {contig1}
+        -K {memory_per_thread}
         -t {thread}
-        >A.paf/overlap.paf
+         > {output_dir}/overlap.paf
         """
-    contig1 = "merge_of_half_contig"
-    contig2 = "merge_of_half_contig"
-    output_dir = f"{output}/temp"
-    if parameter_preset == 1:
-        param1 = "gap of 10"
-        para2 = "lengh of X"
-    elif parameter_preset == 2:
-        param1 = "gap of 100"
-        para2 = "lengh of Y"
-
-    """ Do we consider them always nanopore, Pacbio or do I add an option
-        Can we use more than 2 files at once (sub1.fa sub2.fa sub3.fa)
-    or do I merge all the different contig in 2 file (contig1 and contig2)
-    or do I repeat the minimap for every contig we have (1-2 then A-3 then B-4
-    OR 1-2then 3-4 then A-B)
-        Do I use more specific parameters (ask for all of them in command line
-    or config file) or do it ask for presets parameter or do I keep it default
-        Care the thread use up to thread+1 when mapping (+1 is for I/O)
-    so do i tell him arg.thread - 1 or just arg.threads
+    """
+        TO DO: add possibility to give a configuration file
+        !!!!! Care the thread use up to thread+1 when mapping (+1 is for I/O)
+    so do i tell him (arg.thread - 1) or just (arg.threads)
     """
     return {
             'name': "Minimap2",
-            'file_dep': [contig1, contig2],
+            'file_dep': [contig1],
             'targets': [output_dir],
             'actions': [cmd],
+            'uptodate': [False],
         }
 
 
 @make_task
-def task_miniasm(output, mem, thread, PARAMETER):
-    cmd = """
-        miniasm overlap.paf
-        """
-    file_input1 = "overlap.paf"
-    output_dir = f"{output}/temp"
+def task_miniasm(output, mem, thread):
+    file_input1 = f"{output}/temp/minimap2/overlap.paf"
+    output_dir = f"{output}/temp/miniasm"
+    cmd = """miniasm overlap.paf"""
     return {
             'name': "miniasm",
             'file_dep': [file_input1],
@@ -146,8 +132,8 @@ def task_miniasm(output, mem, thread, PARAMETER):
             'actions': [cmd],
         }
 
-    """ What type of parameter do I do here too and if there is similar
-    parameter do I use the previous one in her
+    """
+        TO DO: add possibility to give a configuration file
         Since both program need installation do I Wrote a install script for
     minimap,miniasm and spades or do I just ask for their PATH or do I assume
     they are in the overall

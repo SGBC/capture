@@ -24,20 +24,20 @@ def test_doit_spades():
     run_tasks(tasks, ['run'])
 
 
-def test_doit_miniasm():
-    output = "testing_miniasm"
-    mem = 24
-    thread = 6
-    contig1 = "name_of_contig_test1"
-    contig2 = "name_of_contig_test2"  # can be changed depending on the method
-    PARAMETER = "preset1"
-    tasks = []
-    tasks.append(task_minimap2(num_sub, output, mem, thread, PARAMETER))
-    task.append(task_miniasm(output, mem, thread, PARAMETER))
-    run_tasks(tasks, ['run'])
-    minimap = READ outfile.paf
-    template_minimap = READ expected_template.paf
-    assert minimap == template_minimap
-    miniasm = READ outfile.gfa
-    template_miniasm = READ expected_template.gfa
-    assert miniasm == template_miniasm
+# def test_doit_miniasm():
+#     output = "testing_miniasm"
+#     mem = 24
+#     thread = 6
+#     contig1 = "name_of_contig_test1"
+#     contig2 = "name_of_contig_test2"  # can be changed depending on the method
+#     PARAMETER = "preset1"
+#     tasks = []
+#     tasks.append(task_minimap2(num_sub, output, mem, thread, PARAMETER))
+#     task.append(task_miniasm(output, mem, thread, PARAMETER))
+#     run_tasks(tasks, ['run'])
+#     minimap = READ outfile.paf
+#     template_minimap = READ expected_template.paf
+#     assert minimap == template_minimap
+#     miniasm = READ outfile.gfa
+#     template_miniasm = READ expected_template.gfa
+#     assert miniasm == template_miniasm
