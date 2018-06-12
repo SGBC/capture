@@ -100,12 +100,11 @@ def task_minimap2(num_sub, output, mem, thread):
     output_dir = f"{output}/temp/minimap2"
     contig1 = f"{contig_dir}/all_contigs.fasta"
     memory_per_thread = mem // thread
-    cmd = f"""minimap2
-        {contig1} {contig1}
-        -K {memory_per_thread}
-        -t {thread}
-         > {output_dir}/overlap.paf
-        """
+    cmd = f"""minimap2 \
+        {contig1} {contig1}\
+        -K {memory_per_thread} \
+        -t {thread} \
+        |gzip -1 > {output_dir}/overlap.paf.gz"""
     """
         TO DO: add possibility to give a configuration file
         !!!!! Care the thread use up to thread+1 when mapping (+1 is for I/O)
@@ -122,9 +121,10 @@ def task_minimap2(num_sub, output, mem, thread):
 
 @make_task
 def task_miniasm(output, mem, thread):
-    file_input1 = f"{output}/temp/minimap2/overlap.paf"
+    file_input1 = f"{output}/temp/minimap2/overlap.paf.gz"
+    file_input2 = f"{output}/temp/all_contigs.fasta"
     output_dir = f"{output}/temp/miniasm"
-    cmd = """miniasm overlap.paf"""
+    cmd = """miniasm -f {file_input2} {file_input1} > resu.gfa """
     return {
             'name': "miniasm",
             'file_dep': [file_input1],
