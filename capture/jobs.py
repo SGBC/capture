@@ -95,46 +95,21 @@ def task_spades(num, type_r, output, mem, thread):
 
 
 @make_task
-def task_minimap2(num_sub, output, mem, thread):
+def task_canu(output, mem, thread, genome_size):
     contig_dir = f"{output}/temp"
-    output_dir = f"{output}/temp/minimap2"
-    contig1 = f"{contig_dir}/all_contigs.fasta"
+    output_dir = f"{output}/temp/canu_out"
+    contig = f"{contig_dir}/all_contigs.fasta"
     memory_per_thread = mem // thread
-    cmd = f"""minimap2 \
-        {contig1} {contig1}\
-        -K {memory_per_thread} \
-        -t {thread} \
-        |gzip -1 > {output_dir}/overlap.paf.gz"""
-    """
-        TO DO: add possibility to give a configuration file
-        !!!!! Care the thread use up to thread+1 when mapping (+1 is for I/O)
-    so do i tell him (arg.thread - 1) or just (arg.threads)
-    """
+    cmd = f""" canu -assemble \
+        -p canu_assembly -d {output_dir} \
+        genomeSize={genome_size} \
+        -pacbio-corrected \
+        {contig} \
+        -maxMemory={mem} -maxThreads={thread}
+        """
     return {
-            'name': "Minimap2",
-            'file_dep': [contig1],
-            'targets': [output_dir],
-            'actions': [cmd],
-            'uptodate': [False],
-        }
-
-
-@make_task
-def task_miniasm(output, mem, thread):
-    file_input1 = f"{output}/temp/minimap2/overlap.paf.gz"
-    file_input2 = f"{output}/temp/all_contigs.fasta"
-    output_dir = f"{output}/temp/miniasm"
-    cmd = """miniasm -f {file_input2} {file_input1} > resu.gfa """
-    return {
-            'name': "miniasm",
-            'file_dep': [file_input1],
+            'name': "Canu",
+            'file_dep': [contig],
             'targets': [output_dir],
             'actions': [cmd],
         }
-
-    """
-        TO DO: add possibility to give a configuration file
-        Since both program need installation do I Wrote a install script for
-    minimap,miniasm and spades or do I just ask for their PATH or do I assume
-    they are in the overall
-    """

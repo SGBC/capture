@@ -16,13 +16,8 @@ def spades(num_sub, output, type_r, mem, thread):  # more parameter later
     run_tasks(tasks, ['run'])
 
 
-def miniasm(num_sub, output, mem, thread):
-    os.makedirs(f"{output}/temp/minimap2")
-    os.makedirs(f"{output}/temp/miniasm")
+def canu(output, mem, thread, genome_size):
+    os.makedirs(f"{output}/temp/canu")
     tasks = []
-    tasks.append(task_minimap2(num_sub, output, mem, thread))
-    tasks.append(task_miniasm(output, mem, thread))
-    """ PARAMETER can be a PATH to a parameter file or can be a preset
-        number or a list of parameter Args
-    """
+    tasks.append(task_canu(output, mem, thread, genome_size))
     run_tasks(tasks, ['run'])

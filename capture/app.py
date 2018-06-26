@@ -50,7 +50,7 @@ def assemble(args):
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
             join.contig(num_sub, output)
-            run.miniasm(num_sub, output, mem, thread)  # add parameter file later
+            run.canu(output, mem, thread, genome_size)
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
@@ -62,7 +62,7 @@ def assemble(args):
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
             join.contig(num_sub, output)
-            run.miniasm(num_sub, output, mem, thread)
+            run.canu(output, mem, thread, genome_size)
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
@@ -74,7 +74,7 @@ def assemble(args):
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
             join.contig(num_sub, output)
-            run.miniasm(num_sub, output, mem, thread)
+            run.canu(output, mem, thread, genome_size)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)
