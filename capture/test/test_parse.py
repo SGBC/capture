@@ -68,9 +68,9 @@ def test_parse_bam():
         counter += 1
     assert counter == 7
     file_record.close()
-    extra = f"{output}/subsample_extra.bam"
-    pysam.index(extra)
-    file_record = pysam.AlignmentFile(extra, "rb")
+    subfile = f"{output}/subsample_extra.bam"
+    pysam.index(subfile)
+    file_record = pysam.AlignmentFile(subfile, "rb")
     counter = 0
     for record in file_record.fetch():
         counter += 1
