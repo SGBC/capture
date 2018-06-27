@@ -3,7 +3,7 @@ python:
     - "3.6"
 before_script:
     - bash install.sh
-    - export $PATH=$PATH:/opt/canu/Linux-amd64/bin/
+    - export $PATH=$PATH:/home/travis/build/SGBC/capture/canu/Linux-amd64/bin/
 install:
     - pip install pipenv
     - pipenv install --dev
