@@ -61,21 +61,11 @@ def test_parse_bam():
     number_records = 7
     parse.parse_bam(output, file, type_f, num_sub, number_records)
     subfile = f"{output}/subsample_1.bam"
-    pysam.index(subfile)
-    file_record = pysam.AlignmentFile(subfile, "rb")
-    counter = 0
-    for record in file_record.fetch():
-        counter += 1
-    assert counter == 7
-    file_record.close()
-    subfile = f"{output}/subsample_extra.bam"
-    pysam.index(subfile)
-    file_record = pysam.AlignmentFile(subfile, "rb")
-    counter = 0
-    for record in file_record.fetch():
-        counter += 1
-    assert counter == 6
-    file_record.close()
+    number_records_subfile = int(pysam.view("-c", subfile))
+    assert number_records_subfile == 7
+    extra = f"{output}/subsample_extra.bam"
+    number_records_extra = int(pysam.view("-c", extra))
+    assert number_records_extra == 6
     # try:
     #     os.remove(f"{output}/subsample_1.bam")
     #     os.remove(f"{output}/subsample_1.bam.bai")

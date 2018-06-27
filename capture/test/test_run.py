@@ -40,7 +40,7 @@ def test_doit_canu():
     tasks.append(task_canu(output, mem, thread, genome_size))
     run_tasks(tasks, ['run'])
     comparison = filecmp.cmp(
-        "/data/test_canu_out.fasta",
+        "data/test_canu_out.fasta",
         f"{output_temp}/canu_out/canu_assembly.contigs.fasta"
         )
     assert comparison is True
