@@ -25,7 +25,7 @@ def test_doit_spades():
                                num, type_r, output, mem, thread
                                ))  # add args later
     run_tasks(tasks, ['run'])
-
+    assert os.path.isfile(f"{output}/contigs.fasta")
 
 def test_doit_canu():
     output = "testing_canu"
