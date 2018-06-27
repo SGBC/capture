@@ -4,7 +4,6 @@ python:
 before_script:
     - bash install.sh
     - export PATH=$PATH:/home/travis/build/SGBC/capture/canu/Linux-amd64/bin/
-    - canu -h
 install:
     - pip install pipenv
     - pipenv install --dev
