@@ -3,4 +3,4 @@ cd canu/src ;
 make -j 4 ;
 cd ../.. ;
 echo 'export PATH="/opt/canu/Linux-amd64/bin:$PATH"' > ~/.bashrc ;
-source ~.bashrc
+source ~/.bashrc
