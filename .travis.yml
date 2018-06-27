@@ -1,8 +1,10 @@
 language: python
 python:
     - "3.6"
-install:
+before_script:
     - bash install.sh
+    - export $PATH=$PATH:/opt/canu/Linux-amd64/bin/
+install:
     - pip install pipenv
     - pipenv install --dev
 script:
