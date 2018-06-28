@@ -13,6 +13,9 @@ from doit.cmd_base import TaskLoader
 from doit.task import clean_targets, dict_to_task
 
 
+@unittest.skipIf(
+    "TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+    "Skipping this test on Travis CI.")
 def test_doit_spades():
     type_r = "test"
     output = "testing_spades"
@@ -27,6 +30,10 @@ def test_doit_spades():
     run_tasks(tasks, ['run'])
     assert os.path.isfile(f"{output}/contigs.fasta")
 
+
+@unittest.skipIf(
+    "TRAVIS" in os.environ and os.environ["TRAVIS"] == "true",
+    "Skipping this test on Travis CI.")
 def test_doit_canu():
     output = "testing_canu"
     output_temp = f"{output}/temp"
