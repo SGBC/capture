@@ -16,7 +16,6 @@ def count_bam(file):
     #     map_seq += int(l.split()[2])
     #     unmap_seq += int(l.split()[3])
     tot_records = int(pysam.view("-c", file))
-    print(tot_records,"babababababababab",type(tot_records))
     # there's a other way to do that (add on end list)
     # tot_records = map_seq + unmap_seq
     return(tot_records)

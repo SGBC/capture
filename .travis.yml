@@ -1,10 +1,6 @@
 language: python
 python:
     - "3.6"
-before_script:
-    - bash install.sh
-    - export PATH=$PATH:/home/travis/build/SGBC/capture/canu/Linux-amd64/bin/
-    - export PATH=$PATH:/home/travis/build/SGBC/capture/SPAdes-3.5.0-Linux/bin/
 install:
     - pip install pipenv
     - pipenv install --dev
