@@ -5,6 +5,7 @@ import os
 import doit
 import logging
 import filecmp
+import unittest
 
 from capture.jobs import *
 from shutil import copyfile
