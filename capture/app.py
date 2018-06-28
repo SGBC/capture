@@ -9,6 +9,7 @@ import argparse
 import random as rnd
 
 from capture import run
+from capture import join
 from capture import clean
 from capture import split
 from capture.version import __version__
@@ -48,6 +49,8 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            join.contig(num_sub, output)
+            run.canu(output, mem, thread, genome_size)
         elif args.uniq:
             type_f = "uniq"
             num_sub = split.split(
@@ -58,6 +61,8 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            join.contig(num_sub, output)
+            run.canu(output, mem, thread, genome_size)
         elif args.bam:
             type_f = "bam"
             num_sub = split.split(
@@ -68,6 +73,8 @@ def assemble(args):
             run.spades(num_sub, output_temp, type_r, mem, thread)
             if args.clean is True:
                 clean.clean_spades(output, num_sub)
+            join.contig(num_sub, output)
+            run.canu(output, mem, thread, genome_size)
         else:
             logger.error("Invalid combination of input files. Aborting")
             sys.exit(1)

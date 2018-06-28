@@ -53,6 +53,11 @@ def split(
         num_sub = int(subsample)
         if type_f == "bam":
             tot_records = bam.count_bam(file)
+            if float((number_records / tot_records)) >= float(1):
+                logger.error(
+                    "Invalid Genome and Mean Size parameter. Aborting"
+                    )
+                sys.exit(1)
             fraction = str((number_records / tot_records)).split(".")[1][:4]
             parse.parse_bam_rnd(
                             output, file, type_f, num_sub, fraction,

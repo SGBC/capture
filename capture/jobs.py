@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import doit
 
 from doit.doit_cmd import DoitMain
@@ -83,13 +82,36 @@ def task_spades(num, type_r, output, mem, thread):
                 'actions': [cmd],
             }
     elif type_r == "test":
-        cmd = f"""spades.py -s  data/20_reads_R1.fastq\
+        cmd = f"""spades.py -1  data/ecoli_1K_1.fq.gz\
+        -2 data/ecoli_1K_2.fq.gz/ \
          -t {thread} -m {mem} -o {output} """
         file_input1 = "data/20_reads_R1.fastq"
+        file_input2 = "data/20_reads_R2.fastq"
         output_dir = f"{output}"
         return {
                 'name': f"spades {num}",
-                'file_dep': [file_input1],
+                'file_dep': [file_input1, file_input2],
                 'targets': [output_dir],
                 'actions': [cmd],
             }
+
+
+@make_task
+def task_canu(output, mem, thread, genome_size):
+    contig_dir = f"{output}/temp"
+    output_dir = f"{output}/temp/canu_out"
+    contig = f"{contig_dir}/all_contigs.fasta"
+    memory_per_thread = mem // thread
+    cmd = f""" canu -assemble \
+        -p canu_assembly -d {output_dir} \
+        genomeSize={genome_size} \
+        -pacbio-corrected \
+        {contig} \
+        -maxMemory={mem} -maxThreads={thread}
+        """
+    return {
+            'name': "Canu",
+            'file_dep': [contig],
+            'targets': [output_dir],
+            'actions': [cmd],
+        }

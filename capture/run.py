@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 
 from capture.jobs import *
 
@@ -15,5 +16,8 @@ def spades(num_sub, output, type_r, mem, thread):  # more parameter later
     run_tasks(tasks, ['run'])
 
 
-# def overlap():
-    # To do later
+def canu(output, mem, thread, genome_size):
+    os.makedirs(f"{output}/temp/canu")
+    tasks = []
+    tasks.append(task_canu(output, mem, thread, genome_size))
+    run_tasks(tasks, ['run'])
