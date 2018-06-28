@@ -5,6 +5,12 @@ from Bio import SeqIO
 
 
 def contig(num_sub, output):
+    """Join all the SPAdes contig produce in each subsample run
+        in one file. The contig must be at least 1000bp long
+        Arguments:
+            num_sub = the number of subsample analyzed by SPAdes
+            output = the path to the output directory
+    """
     location_contigs = output + "/spades_contigs"
     output_temp = output + "/temp"
     list_contigs = []

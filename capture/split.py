@@ -15,7 +15,18 @@ def split(
         wanted_cov=100
         ):
     """ calcul the number of reads needed in each subsample then
-        parse the file and make the subsample
+        parse the file and makes the subsamples
+        Arguments:
+            genome_size = the size of the expected genome
+            mean_size = the mean size of the reads
+            output = the path to the output directory
+            file = the path to the input file
+            type_f = the type of file
+            subsample =  the number of subsample wanted
+                        (or all the subsample possible)
+            wanted_cov = the coverage wanted in each of the subsample
+        Return:
+            int
     """
     logger = logging.getLogger(__name__)
     # caclul the number of reads in each subsample for a coverage

@@ -6,3 +6,9 @@ __pycache__
 
 # PyDoit
 .doit.db
+
+# Pip Package
+capture_assembler.egg-info
+Capture.egg-info
+dist
+build

@@ -13,7 +13,11 @@ from capture import bam
 
 def is_gzip(file):
     """ test if the file is gzip using the 4 first byte of the file
-        who are characteristic of the type of file
+        who are characteristic of the type of file.
+        Arguments:
+            file =  the path to the file to test
+        return:
+            boolean answer
     """
     logger = logging.getLogger(__name__)
     magic_number = b"\x1f\x8b\x08"
@@ -29,7 +33,9 @@ def is_gzip(file):
 
 
 def count_record(file):
-    """count the number of reads present in the file
+    """count the number of reads present in the fastq file
+        Arguments:
+            file = the the path to the file where to count
     """
     if is_gzip(file):
         with gzip.open(file, "rt") as handle:
@@ -47,7 +53,16 @@ def parse_fq(output, file, type_f, num_sub, number_records, handle):
     """ we read the file, we make a sum of the reads
         each time we get the number of reads for the wanted coverage
         we save them in a subfile, and keep reading the infile to
-        get the next subfile
+        get the next subfile. All the read will be selected because
+        the number of subsample is the highest possible.
+        For fastq files
+        Arguments:
+            output = the path to the output directory
+            file = the fastq file where we retrieve the sequence
+            type_f = the type of file (bam/fastq)
+            num_sub = the number of subsample (first, second,...)
+            number_records = number  of record needed in each subsample
+            handle = the file open to be read
     """
     c = 1
     c_sub = 1
@@ -84,6 +99,19 @@ def parse_fq_rnd(
                 num_sub, number_records,
                 handle, tot_records
                 ):
+    """ we read the file, we make a sum of the reads
+        each time we get the number of reads for the wanted coverage
+        we save them in a subfile, and keep reading the infile to
+        get the next subfile. Here we choose randomly the reads because
+        the number of subsample is limited
+        Arguments:
+            output = the path to the output directory
+            file = the fastq file where we retrieve the sequence
+            type_f = the type of file (bam/fastq)
+            num_sub = the number of subsample (first, second,...)
+            number_records = number  of record needed in each subsample
+            handle = the file open to be read
+    """
     total_record = tot_records
     wanted_record = num_sub * number_records
     file_record = SeqIO.parse(handle, "fastq")
@@ -120,7 +148,18 @@ def reservoir(total_record, wanted_record, file_record):
 
 
 def parse_bam(output, file, type_f, num_sub, number_records):
-    """ same as parse_fq but for bam format
+    """ we read the file, we make a sum of the reads
+        each time we get the number of reads for the wanted coverage
+        we save them in a subfile, and keep reading the infile to
+        get the next subfile. Here we choose randomly the reads because
+        the number of subsample is limited.
+        For bam files
+        Arguments:
+            output = the path to the output directory
+            file = the fastq file where we retrieve the sequence
+            type_f = the type of file (bam/fastq)
+            num_sub = the number of subsample (first, second,...)
+            number_records = number  of record needed in each subsample
     """
     c = 1
     c_sub = 1
@@ -148,7 +187,15 @@ def parse_bam(output, file, type_f, num_sub, number_records):
 
 def parse_bam_rnd(output, file, type_f, num_sub, fraction):
     """  parse the bam file and create only a chosen number
-    of subsample"""
+    of subsample. Each subsample contains randomly chosen reads
+    Arguments:
+        output = the path to the output directory
+        file = the fastq file where we retrieve the sequence
+        type_f = the type of file (bam/fastq)
+        num_sub = the number of subsample (first, second,...)
+        number_records = number  of record needed in each subsample
+        fraction = the fraction of the bamfile needed to do the subsample one
+    """
     c_sub = 1
     for sub in range(num_sub):
         pysam.view(

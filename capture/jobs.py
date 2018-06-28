@@ -17,7 +17,13 @@ from doit.task import clean_targets, dict_to_task
 def run_tasks(tasks, args, config={'verbosity': 0}):
     '''Given a list of `Task` objects, a list of arguments,
     and a config dictionary, execute the tasks.
-    Those task will be SPAdes and overlap layout
+    Those task will be SPAdes and overlap layout (Canu)
+        Arguments:
+            tasks =  list of 'Task' objects
+            args = the list of arguments link to those tasks
+            config = configuration dictionary
+        Return:
+            the execution of the tasks
     '''
 
     if type(tasks) is not list:
@@ -44,6 +50,18 @@ def make_task(task_dict_func):
 
 @make_task
 def task_spades(num, type_r, output, mem, thread):
+    """ Execute SPAdes according to a certain presetting
+        The presetting is chosen according to type_r
+        Arguments:
+            num = the number of spades run (first, second,...)
+            type_r =  the type of spades run to execute (paired-end, bam,...)
+            output = the path to the output directory
+            mem =  the memory available spades can use
+            thread = the number of threads available spades can use
+        Return:
+            dictionary
+
+    """
 
     if type_r == "pe":
         cmd = f"""spades.py -1 {output}/subsample_forward{num}.fastq \
@@ -98,6 +116,15 @@ def task_spades(num, type_r, output, mem, thread):
 
 @make_task
 def task_canu(output, mem, thread, genome_size):
+    """Execute Canu to overlap all the contigs obtained by SPAdes run
+        Arguments:
+            output =  the path to the output directory
+            mem =  the memory available spades can use
+            thread = the number of threads available spades can use
+            genome_size = the size of the wanted genome
+            Return:
+                dictionary
+    """
     contig_dir = f"{output}/temp"
     output_dir = f"{output}/temp/canu_out"
     contig = f"{contig_dir}/all_contigs.fasta"
