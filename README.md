@@ -18,6 +18,7 @@ Thanks for your interest and come back soon!
 * Canu
 
 To install capture-assembler, simply type the following in your terminal:
+
     pip install capture-assembler
     
 
@@ -60,6 +61,13 @@ capture assemble -h
 
 ```
 
+
+## External Links
+
+Official link to:
+
+* [SPAdes](http://cab.spbu.ru/software/spades/)
+* [Canu](http://canu.readthedocs.io/en/latest/)
 
 ## License
 
