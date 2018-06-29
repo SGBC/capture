@@ -12,8 +12,7 @@ from capture import bam
 
 
 def is_gzip(file):
-    """ test if the file is gzip using the 4 first byte of the file
-        who are characteristic of the type of file.
+    """ test if the file is gzip
         Arguments:
             file =  the path to the file to test
         return:
@@ -50,12 +49,12 @@ def count_record(file):
 
 
 def parse_fq(output, file, type_f, num_sub, number_records, handle):
-    """ we read the file, we make a sum of the reads
-        each time we get the number of reads for the wanted coverage
-        we save them in a subfile, and keep reading the infile to
-        get the next subfile. All the read will be selected because
-        the number of subsample is the highest possible.
-        For fastq files
+    """ read the file, make a sum of the reads
+        for each occurence, the number of reads for the wanted coverage
+        is saved in a subfile. The software keep reading the infile to
+        get the next subfile. All the read will be selected, because
+        the number of subsample required is the highest possible.
+        Only for fastq files
         Arguments:
             output = the path to the output directory
             file = the fastq file where we retrieve the sequence
@@ -99,11 +98,12 @@ def parse_fq_rnd(
                 num_sub, number_records,
                 handle, tot_records
                 ):
-    """ we read the file, we make a sum of the reads
-        each time we get the number of reads for the wanted coverage
-        we save them in a subfile, and keep reading the infile to
-        get the next subfile. Here we choose randomly the reads because
-        the number of subsample is limited
+    """ Read the file, make a sum of the reads
+        for each occurence, the number of reads for the wanted coverage
+        is saved in a subfile. the software keep reading the infile to
+        get the next subfile. Here the reads are chosen randomly because
+        the number of subsample is limited.
+        Only for Fastq
         Arguments:
             output = the path to the output directory
             file = the fastq file where we retrieve the sequence
@@ -148,12 +148,13 @@ def reservoir(total_record, wanted_record, file_record):
 
 
 def parse_bam(output, file, type_f, num_sub, number_records):
-    """ we read the file, we make a sum of the reads
-        each time we get the number of reads for the wanted coverage
-        we save them in a subfile, and keep reading the infile to
-        get the next subfile. Here we choose randomly the reads because
-        the number of subsample is limited.
-        For bam files
+    """ Read the file, make a sum of the reads
+        for each occurence, the number of reads for the wanted coverage
+        is saved in a subfile.the software keep reading the infile to
+        get the next subfile. All the reads will be parsed
+        and write in a subsample since the highest number of subsample
+        possible is required
+        Only for bam files
         Arguments:
             output = the path to the output directory
             file = the fastq file where we retrieve the sequence
@@ -188,6 +189,7 @@ def parse_bam(output, file, type_f, num_sub, number_records):
 def parse_bam_rnd(output, file, type_f, num_sub, fraction):
     """  parse the bam file and create only a chosen number
     of subsample. Each subsample contains randomly chosen reads
+    Only for bam files
     Arguments:
         output = the path to the output directory
         file = the fastq file where we retrieve the sequence

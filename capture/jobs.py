@@ -122,8 +122,8 @@ def task_canu(output, mem, thread, genome_size):
             mem =  the memory available spades can use
             thread = the number of threads available spades can use
             genome_size = the size of the wanted genome
-            Return:
-                dictionary
+        Return:
+            dictionary
     """
     contig_dir = f"{output}/temp"
     output_dir = f"{output}/temp/canu_out"
