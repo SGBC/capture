@@ -6,7 +6,10 @@ import shutil
 
 def clean_spades(output, num_sub):
     """  save the contigs from each spades run and
-    remove all the tmp files
+    remove all the temporary files
+        Arguments:
+            output =  the path to the output directory
+            num_sub = the number of subsample
     """
     output_temp = output + "/temp"
     output_spades_contig = output + "/spades_contigs"

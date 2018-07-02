@@ -6,8 +6,11 @@ import pysam
 
 def count_bam(file):
     """ count the number of reads present in the file
-        bam_file = pysam.AlignmentFile(file, "rb")
-        Needs the bam file and bam index file to work
+
+        Arguments:
+            file : the path to the bamfile we will reads
+        return:
+            int ()
     """
     # map_seq = 0
     # unmap_seq = 0
@@ -22,13 +25,13 @@ def count_bam(file):
 
 
 def write(reads, output, c_sub, file_record):
-    """ Will be add if need of only paired reads in bam
-        if args.paired:
-            for read in reads:
-                if read.is_paired:
-                    pairedreads.write(read)
-                pairedreads.close()
-        else:
+    """
+        Write the reads selected in a subsample
+        Arguments:
+            reads = the reads to write in the subsample
+            output = the path to the output directory
+            c_sub = the subsample number
+            file_record = the template format to write the subsample
     """
     allreads = pysam.AlignmentFile(
         f"{output}/subsample_{c_sub}.bam",

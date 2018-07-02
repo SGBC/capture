@@ -17,7 +17,7 @@ from capture.version import __version__
 
 def assemble(args):
     """
-    main function for the capture software
+    main function for the capture-assembler
 
     Arguments:
     args (object): the argument dictionary from argparse
