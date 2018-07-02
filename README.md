@@ -20,27 +20,39 @@ Thanks for your interest and come back soon!
 To install capture-assembler, simply type the following in your terminal:
 
     pip install capture-assembler
-    
+It requires python 3.6 and canu and spades already installed.
+
+If you use conda you can install it using:
+
+    conda install -c rvandamme capture-assembler
+It requires a conda environment with python 3.6 and canu and spades already installed.
+
+To install capture-assembler, spades and canu in a conda environment (recommanded to create a new one), type the following:
+ ```bash
+ conda create -n env_name python=3.6 # create a new env in python 3.6 (optionnal)
+ conda install -n env_name -c rvandamme capture-assembler  canu=1.7 spades=3.12.0
+ conda activate env_name #start using the environment and the capture-assembler
+ ```
 
 ## Quickstart
 
 ```bash
 # paired-end reads, Illumina MiSeq
-capture assemble -f reads_R1.fastq.gz -r reads_R2.fastq.gz \
+capture -f reads_R1.fastq.gz -r reads_R2.fastq.gz \
 --genome_size 35000 --mean 300 -o output_dir
 # compressed paired-end reads, Illumina HiSeq
-capture assemble -f reads_R1.fastq.gz -r reads_R2.fastq.gz \
+capture -f reads_R1.fastq.gz -r reads_R2.fastq.gz \
 --genome_size 35000 --mean 125 -o output_dir
 # single end reads, Ion Torrent
-capture assemble -u reads.fastq.gz \
+capture -u reads.fastq.gz \
 --genome_size 35000 --mean 240 -o output_dir
 # reads in bam format (Ion Torrent)
-capture assemble --bam reads.bam \
+capture --bam reads.bam \
 --genome_size 35000 --mean 240 -o output_dir
 # full list of subcommands and options
 capture -h
 # full list of options for a subcommand
-capture assemble -h
+capture -h
 ```
 ## Arguments
 
